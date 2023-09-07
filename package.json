@@ -1,0 +1,40 @@
+{
+  "name": "cafe",
+  "version": "1.0.0",
+  "description": "Move datas from cafe to site.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index"
+  },
+  "author": "Jaewon Kim",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "cheerio": "^1.0.0-rc.12",
+    "csv-parser": "^3.0.0",
+    "csv-stringify": "^3.0.0",
+    "dotenv": "^16.0.1",
+    "exceljs": "^4.3.0",
+    "fs": "^0.0.1-security",
+    "google-spreadsheet": "^3.3.0",
+    "mv": "^2.1.1",
+    "node-schedule": "^2.1.0",
+    "puppeteer": "^16.0.0",
+    "puppeteer-get-iframe": "^1.0.0",
+    "python-shell": "^3.0.1",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "fetch": "^1.1.0",
+    "google-charts": "^2.0.0",
+    "google-charts-node": "^1.0.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jaewonks/cafe_to_ss.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jaewonks/cafe_to_ss/issues"
+  },
+  "homepage": "https://github.com/jaewonks/cafe_to_ss#readme"
+}
