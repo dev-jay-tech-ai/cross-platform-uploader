@@ -19,7 +19,7 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         len++;
         const imgName = result.Link.match('(?<=articleid=)(.*?)(?=\&)')[0];
         const linkInfo = 'cafe.naver.com/soimarket/'+ imgName;
-        const orgarr = result.Name.replaceAll(/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi,'').split(' ');
+        const orgarr = result.Name.replaceAll(/[\{\}\[\]\/?.,;:|\*~`!^\-_+<>@\#$%&\\\=\\'\"]/gi,'').split(' ');
         const org = orgarr.slice(1,orgarr.length);
         const string = orgarr.slice(2,orgarr.length-1).join(' ');
         let name = '';
@@ -74,17 +74,19 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         const getByerPrice = (code) => {
           if(code.includes('(')) {
             const arr = code.split('(');
-            const ex1 = code.match(/\((\d+)\)/);
+            const ex1 = code.match(/\((\d+)\)/)[1];
             const ex2 = arr[1].replace(')','');
             const num = arr[0].includes('1000') ? arr[0].replace('1000','') : arr[0].replace('100','')
-            if(ex1 === ex2) return Number(num)/Number(ex1);
+            const result = Number(num)-(Number(ex1)/100 * Number(num));
+            const numUnit = arr[0].includes('1000') ? '1000' : '100';
+            if(ex1 === ex2) return numUnit+result;
           } else return code; 
         }
         const buyerCode = buyerCodeArr.length > 0 ? getByerPrice(buyerCodeArr[buyerCodeArr.length-1]) : '';
         const orgDetail = detail
         .replace('*****오리지널제목*****', title)
         .replace('*****바잉팀코멘트*****', formPrice+'\n'+formColor+'\n'+formSize+'\n'+formEtc+'\n')
-        .replace('*****바잉가격*****', '바잉가격코드: '+ buyerCode)
+        .replace('*****바잉가격*****', '바잉가격코드: '+ buyerCode +'(테스트 중입니다, 결과가 좋으면 제목에도 쓸게요)')
         .replace('*****카페링크*****', linkInfo)
         .replaceAll('*****브랜드*****', brand)
         .replaceAll('*****이미지*****', imgArr.join(''))
@@ -92,6 +94,7 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         .replaceAll('*****색상*****', formColor);
         //정보 : [0 상품명, 1 판매가, 2 대표이미지파일명, 3 추가이미지파일명, 4 상품상세정보, 5 브랜드]
         //상세페이지 만들기 [풀제목] [가격] [바잉코멘트] [이미지]
+        console.log(buyerCode)
         let orgData = [];
         orgData.push(imgName+' '+total, tmp, imgName+'_0'+'.jpg', addImg.join(','), orgDetail, brandcode(brand), cate);
         totalData.push(orgData);
