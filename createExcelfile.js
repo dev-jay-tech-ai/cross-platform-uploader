@@ -31,7 +31,20 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         const cate = formEtc&&formEtc.includes('ㅇ')?50000815:50000651; 
         const brand = org[0];
         const num = org[org.length-1]; // result.Images
-        
+        const title = result.Name;
+        const buyerCodeArr = title.split(' ').filter((t) => t.match(/^1000?\d+(\(\d+\))?$/));
+        const getByerPrice = (code) => {
+          if(code.includes('(')) {
+            const arr = code.split('(');
+            const ex1 = code.match(/\((\d+)\)/)[1];
+            const ex2 = arr[1].replace(')','');
+            const num = arr[0].includes('1000') ? arr[0].replace('1000','') : arr[0].replace('100','')
+            const result = Number(num)-(Number(ex1)/100 * Number(num));
+            const numUnit = arr[0].includes('1000') ? '1000' : '100';
+            if(ex1 === ex2) return numUnit+result;
+          } else return code; 
+        }
+        const buyerCode = buyerCodeArr.length > 0 ? getByerPrice(buyerCodeArr[buyerCodeArr.length-1]) : '';
         if(string.includes('정가')) {
           name = string.slice(0, string.indexOf('정가'));
           price = string.slice(string.indexOf('정가'),string.length);
@@ -43,7 +56,7 @@ fs.createReadStream('csv/'+csvFile+'.csv')
           price = string.slice(string.indexOf('모포'),string.length);
         }
         name = name.replace(formColor&&formColor.slice(0, formColor.length-1),'');
-        const total = brand + ' ' + name + '/ ' + formColor + ' ' + num;
+        const total = brand + ' ' + name + '/ ' + formColor + ' ' + buyerCode;
         let tmp;
         if(formPrice !== undefined) {
           if(formPrice.includes('만') && formPrice.includes('천')) {
@@ -69,32 +82,20 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         for(let j=0; j<imgLen; j++) {
           imgArr.push(imgEle.replace('*****이미지*****', imgList[j]))
         } 
-        const title = result.Name;
-        const buyerCodeArr = title.split(' ').filter((t) => t.match(/^1000?\d+(\(\d+\))?$/));
-        const getByerPrice = (code) => {
-          if(code.includes('(')) {
-            const arr = code.split('(');
-            const ex1 = code.match(/\((\d+)\)/)[1];
-            const ex2 = arr[1].replace(')','');
-            const num = arr[0].includes('1000') ? arr[0].replace('1000','') : arr[0].replace('100','')
-            const result = Number(num)-(Number(ex1)/100 * Number(num));
-            const numUnit = arr[0].includes('1000') ? '1000' : '100';
-            if(ex1 === ex2) return numUnit+result;
-          } else return code; 
-        }
-        const buyerCode = buyerCodeArr.length > 0 ? getByerPrice(buyerCodeArr[buyerCodeArr.length-1]) : '';
+
         const orgDetail = detail
         .replace('*****오리지널제목*****', title)
         .replace('*****바잉팀코멘트*****', formPrice+'\n'+formColor+'\n'+formSize+'\n'+formEtc+'\n')
-        .replace('*****바잉가격*****', '바잉가격코드: '+ buyerCode +'(테스트 중입니다, 결과가 좋으면 제목에도 쓸게요)')
+        .replace('*****바잉가격*****', '바잉가격코드: '+ buyerCode)
         .replace('*****카페링크*****', linkInfo)
         .replaceAll('*****브랜드*****', brand)
         .replaceAll('*****이미지*****', imgArr.join(''))
         .replaceAll('*****사이즈*****', formSize)
-        .replaceAll('*****색상*****', formColor);
+        .replaceAll('*****색상*****', formColor)
+        .replaceAll('//브랜드//', brand);
         //정보 : [0 상품명, 1 판매가, 2 대표이미지파일명, 3 추가이미지파일명, 4 상품상세정보, 5 브랜드]
         //상세페이지 만들기 [풀제목] [가격] [바잉코멘트] [이미지]
-        console.log(buyerCode)
+        console.log(num, buyerCode)
         let orgData = [];
         orgData.push(imgName+' '+total, tmp, imgName+'_0'+'.jpg', addImg.join(','), orgDetail, brandcode(brand), cate);
         totalData.push(orgData);
