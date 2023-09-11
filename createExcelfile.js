@@ -8,6 +8,7 @@ const filename = require('./fileName');
 const detail = require('./detail');
 const csvFile = require('./createImage');
 const brandcode = require('./brandcode');
+const getCate = require('./getCategory');
 let len = 2;
 // csv에서 정보 가져오기
 fs.createReadStream('csv/'+csvFile+'.csv')
@@ -28,10 +29,19 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         const formColor = form[2]&&form[2].split(':')[1].trim().replaceAll('\n','');
         const formSize = form[3]&&form[3].split(':')[1].trim().replaceAll('\n','');
         const formEtc = form[4]&&form[4].split(':')[1].trim().replaceAll('\n','');
-        const cate = formEtc&&formEtc.includes('ㅇ')?50000815:50000651; 
+        const title = result.Name;
+        const cateInfo  = getCate(title);
+        const cate = cateInfo !== 0 ? cateInfo : formEtc&&formEtc.includes('ㅇ')?50000815:50000651; 
+        /** 상품 정보 제고 공시 템플릿 */
+        const productInfo = {
+          '의류' : 2460658,
+          '신발' : 2315292,
+          '가방' : 2009506,
+          '패션잡화' : 2007158
+        }
+
         const brand = org[0];
         const num = org[org.length-1]; // result.Images
-        const title = result.Name;
         const buyerCodeArr = title.split(' ').filter((t) => t.match(/^1000?\d+(\(\d+\))?$/));
         const getByerPrice = (code) => {
           if(code.includes('(')) {
@@ -88,6 +98,7 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         .replace('*****바잉팀코멘트*****', formPrice+'\n'+formColor+'\n'+formSize+'\n'+formEtc+'\n')
         .replace('*****바잉가격*****', '바잉가격코드: '+ buyerCode)
         .replace('*****카페링크*****', linkInfo)
+        .replace('//신발치수//', '굽높이 써라잉')
         .replaceAll('*****브랜드*****', brand)
         .replaceAll('*****이미지*****', imgArr.join(''))
         .replaceAll('*****사이즈*****', formSize)
