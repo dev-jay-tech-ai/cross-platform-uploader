@@ -4,6 +4,7 @@ const results = []; // 'Link', 'Name', 'Comments', 'Images'
 const csvFile = '2023-09-10_161349(200)';
 const getCate = require('./getCategory');
 const getCateNum = require('./asset/category_num');
+const getProductInfo = require('./getProductInfo');
 let len = 2;
 // csv에서 정보 가져오기
 fs.createReadStream('csv/'+csvFile+'.csv')
@@ -18,9 +19,10 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         const title = result.Name;
         const cate  = getCate(title);
         const cateInfo = getCateNum(cate); 
+        const productInfo = getProductInfo(cate);
         console.log('\n'+cate)
         console.log(title,'\n', '*****'+cateInfo+'\n')
-
+        console.log(productInfo)      
       } 
     })
   });

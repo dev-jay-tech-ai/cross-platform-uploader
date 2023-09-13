@@ -5,12 +5,10 @@ const results = []; // 'Link', 'Name', 'Comments', 'Images'
 const totalData = [];
 const { PythonShell } = require('python-shell');
 const detail = require('./detail');
-const csvFile = require('./createImage');
 const brandcode = require('./brandcode');
-const getCate = require('./func/getCategory');
-const getChecklist = require('./func/getChecklist');
-const getProductInfo = require('./func/getProductInfo');
-const getCateNum = require('./asset/category_num');
+const getCate = require('./getCategory');
+const getProductInfo = require('./getProductInfo');
+const csvFile = '2023-09-10_161349(200)';
 let len = 2;
 // csv에서 정보 가져오기
 fs.createReadStream('csv/'+csvFile+'.csv')
@@ -88,18 +86,16 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         for(let j=0; j<imgLen; j++) {
           imgArr.push(imgEle.replace('*****이미지*****', imgList[j]))
         } 
-        let origin = '이탈리아 및 그 외 국가 oem 생산';
-        const itOrigin = ['펜디','토즈','로저비비에'];
-        if(itOrigin.includes(brand)) origin = '이탈리아'
-        
-        const { package, boxInc, dustInc } = getChecklist(productInfo, cate)
- 
-        /** 체크리스트 디버깅 */
-        const category = getCateNum(cate); 
-        console.log(cate, category)
-        console.log(title)
-        console.log(package)
-        console.log('\n')
+        let option = 0;
+        if(formColor !== undefined) {
+          const coloOptArr = formColor.split(/[\/+,&]/);
+          // console.log(formColor)
+          // console.log(coloOptArr)
+          const colorOpt = coloOptArr.map((col) => col.replaceAll(/[() ]/g, '')).join(',');
+          console.log('결과물: ',colorOpt)
+          console.log('\n')
+          option = colorOpt;
+        }
 
         const orgDetail = detail
         .replace('*****오리지널제목*****', title)
@@ -107,21 +103,16 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         .replace('*****바잉가격*****', '바잉가격코드: '+ buyerCode)
         .replace('*****카페링크*****', linkInfo)
         .replace('//신발치수//', '굽높이 써라잉')
-        .replace('//원산지표기//', origin)
-        .replace('//구성품//', package)
-        .replace('//브랜드박스//', boxInc)
-        .replace('//더스트백//', dustInc)
         .replaceAll('*****브랜드*****', brand)
         .replaceAll('*****이미지*****', imgArr.join(''))
         .replaceAll('*****사이즈*****', formSize)
         .replaceAll('*****색상*****', formColor)
         .replaceAll('//브랜드//', brand);
-  
         //정보 : [0 상품명, 1 판매가, 2 대표이미지파일명, 3 추가이미지파일명, 4 상품상세정보, 5 브랜드]
         //상세페이지 만들기 [풀제목] [가격] [바잉코멘트] [이미지]
-        console.log(num, buyerCode)
+        // console.log(num, buyerCode)
         let orgData = [];
-        orgData.push(imgName+' '+total, tmp, imgName+'_0'+'.jpg', addImg.join('\n'), orgDetail, brandcode(brand), cate, productInfo);
+        orgData.push('(삭제예정) '+total, tmp, imgName+'_0'+'.jpg', addImg.join('\n'), orgDetail, brandcode(brand), cate, productInfo, option);
         totalData.push(orgData);
       } 
     })
@@ -144,6 +135,13 @@ fs.createReadStream('csv/'+csvFile+'.csv')
           worksheet.getCell(`U${i}`).value = data[5]; // 브랜드
           worksheet.getCell(`Z${i}`).value = data[5]; // 수입사
           worksheet.getCell(`AT${i}`).value = data[7]; // 상품정보제공
+          // 옵션부분 
+          if(data[8]) {
+            worksheet.getCell(`H${i}`).value = '단독형'; // 옵션(단독형, 조합형)
+            worksheet.getCell(`I${i}`).value = '컬러\n사이즈'; // 옵션
+            worksheet.getCell(`J${i}`).value = data[8]+'\nOne Size';; // 옵션
+          }
+
         })
         return workbook.xlsx.writeFile(`excel/cafe_${csvFile}.xlsx`);
     })
