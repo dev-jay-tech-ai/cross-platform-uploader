@@ -6,16 +6,18 @@ module.exports = (productInfo, cate) => {
   let dustInc = '더스트백 포함□ 미포함■'
   if(productInfo === '2315292') { // 신발
     package = '본품+더스트백+하드케이스'; 
-    dustInc = '더스트백 포함■ 미포함□'
     boxInc = '브랜드 박스 포함■ 미포함□'
-  }  
-  if(bagCate.includes(cate)) { // 가방
-    package = '본품+더스트백';
     dustInc = '더스트백 포함■ 미포함□'
   }  
-  if(walletCate.includes(cate)) { // 자갑
+  else if(bagCate.includes(cate)) { // 가방
+    package = '본품+더스트백';
+    boxInc = '브랜드 박스 포함□ 미포함■'
+    dustInc = '더스트백 포함■ 미포함□'
+  }  
+  else if(walletCate.includes(cate)) { // 자갑
     package = '본품+하드케이스';
     boxInc = '브랜드 박스 포함■ 미포함□'
+    dustInc = '더스트백 포함□ 미포함■'
   } 
   return { package, boxInc, dustInc }
 }

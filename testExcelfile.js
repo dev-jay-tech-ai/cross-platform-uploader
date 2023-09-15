@@ -6,8 +6,10 @@ const totalData = [];
 const { PythonShell } = require('python-shell');
 const detail = require('./detail');
 const brandcode = require('./brandcode');
-const getCate = require('./getCategory');
-const getProductInfo = require('./getProductInfo');
+const getCate = require('./func/getCategory');
+const getOption = require('./func/getOption');
+const getSizeguide = require('./func/getSizeguide');
+const getProductInfo = require('./func/getProductInfo');
 const csvFile = '2023-09-10_161349(200)';
 let len = 2;
 // csv에서 정보 가져오기
@@ -86,17 +88,12 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         for(let j=0; j<imgLen; j++) {
           imgArr.push(imgEle.replace('*****이미지*****', imgList[j]))
         } 
-        let option = 0;
-        if(formColor !== undefined) {
-          const coloOptArr = formColor.split(/[\/+,&]/);
-          // console.log(formColor)
-          // console.log(coloOptArr)
-          const colorOpt = coloOptArr.map((col) => col.replaceAll(/[() ]/g, '')).join(',');
-          console.log('결과물: ',colorOpt)
-          console.log('\n')
-          option = colorOpt;
-        }
+        const sizeTemplate = getSizeguide(name, formSize, brand, cate)
+        const option = getOption(cate, formColor);
 
+
+
+        
         const orgDetail = detail
         .replace('*****오리지널제목*****', title)
         .replace('*****바잉팀코멘트*****', formPrice+'\n'+formColor+'\n'+formSize+'\n'+formEtc+'\n')
@@ -117,6 +114,7 @@ fs.createReadStream('csv/'+csvFile+'.csv')
       } 
     })
     // 엑셀 정보 읽고 각자 열에 쓰기
+    /** 
     async function saveExcel () {
     //엑셀 데이터 읽고 워크북 불러오기
     const workbook = new Excel.Workbook();
@@ -162,5 +160,5 @@ fs.createReadStream('csv/'+csvFile+'.csv')
       await saveExcel();
       await pythonPro();
     }
-    process();
+    process();*/
   });

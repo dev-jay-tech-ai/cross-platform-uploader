@@ -31,7 +31,7 @@ module.exports = (name) => {
     ) cate = 50000787
     if(name.includes('티셔츠') || name.includes('반팔') || name.includes('맨투맨')) cate = 50000830
     if(name.includes('니트') || name.includes('풀오버') || name.includes('스웨터') ||
-      name.includes('터틀넥') || name.includes('스웻셔츠')) cate = 50000831 
+      name.includes('터틀넥') || name.includes('스웻셔츠')) cate = 50000805
     if(name.includes('가디건') || name.includes('카디건')) cate = 50000832  
     if(name.includes('셔츠') || name.includes('남방') || name.includes('브라우스')) cate = 50000833
     if(name.includes('바지') || name.includes('숏츠') || name.includes('쇼츠') ||  
@@ -60,7 +60,7 @@ module.exports = (name) => {
       if(name.includes('반지갑') || name.includes('폴딩') || name.includes('콤팩트')) cate = 50003985
       if(name.includes('장지갑')) cate = 50003987
     }
-
+    if(name.includes('스카프')) cate = 50004010
   } else {
     // 여성
     
@@ -74,6 +74,17 @@ module.exports = (name) => {
     if(name.includes('숄') || name.includes('스톨') ||  
       name.includes('케이프') || name.includes('판초')) cate = 50000567
     if(name.includes('카드') || name.includes('명함') || name.includes('비즈니스 카드')) cate = 50000662
+    if(name.includes('백') || name.includes('가방')) {
+      /** 
+      if(name.includes('버킷')) cate = 50000639
+      if(name.includes('숄더')) cate = 50000639
+      */
+      if(name.includes('박스')) cate = 50000640
+      if(name.includes('토트')) cate = 50000640
+      if(name.includes('보스턴')) cate = 50000653
+      if(name.includes('탑') && name.includes('핸들')) cate = 50000639
+      else cate = 50000639 // 버킷 숄더 바스켓 복조리
+    }
     if(name.includes('숄더백')) cate = 50000639
     if(name.includes('크로스백')) cate = 50000641
     if(name.includes('클러치')) cate = 50000642
@@ -113,17 +124,9 @@ module.exports = (name) => {
       
     if(name.includes('백팩') || name.includes('배낭')) cate = 50000644
     if(name.includes('범백') || name.includes('벨트백') || name.includes('힙색')) cate = 50000645
-    if(name.includes('백') || name.includes('가방')) {
-      /** 
-      if(name.includes('버킷')) cate = 50000639
-      if(name.includes('숄더')) cate = 50000639
-      */
-      if(name.includes('박스')) cate = 50000640
-      if(name.includes('토트')) cate = 50000640
-      if(name.includes('보스턴')) cate = 50000653
-      if(name.includes('탑') && name.includes('핸들')) cate = 50000639
-      else cate = 50000639 // 버킷 숄더 바스켓 복조리
-    }
+    if(name.includes('토트백')) cate = 50000640
+    if(name.includes('쇼퍼백')) cate = 50000640
+
     if(name.includes('여권') || name.includes('패스포트')) cate = 50000657
     if(name.includes('슬리퍼')) cate = 50000780
 
@@ -181,7 +184,7 @@ module.exports = (name) => {
     if(name.includes('플랫') || name.includes('플렛') || name.includes('메리제인')) cate = 50003817
     if(name.includes('드라이빙') || name.includes('로퍼') || 
       name.includes('고미노') || name.includes('고미니')) cate = 50003818  
-    if(name.includes('슈즈') || name.includes('화') || 
+    if(name.includes('슈즈') || 
       name.includes('신발') || name.includes('구두')) {
       if(name.includes('발레리나') || name.includes('로우힐')) cate = 50003817 // 플렛
       if(name.includes('옥스퍼드') || name.includes('옥스포드')) cate = 50003818 // 로퍼
@@ -216,6 +219,7 @@ module.exports = (name) => {
       else if(name.includes('뮬') || name.includes('블로퍼') ||  name.includes('클로그')) cate = 50003847
       else cate = 50004191
     }
+    if(name.includes('뮬') || name.includes('블로퍼')) cate = 50003847
     if(name.includes('클로그')) cate = 50003847
     if(name.includes('브로치')) cate = 50004028
     if(name.includes('시계')) {

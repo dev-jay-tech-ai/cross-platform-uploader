@@ -2,8 +2,9 @@ const csv = require('csv-parser');
 const fs = require('fs');
 const results = []; // 'Link', 'Name', 'Comments', 'Images'
 const csvFile = '2023-09-10_161349(200)';
-const getCate = require('./getCategory');
 const getCateNum = require('./asset/category_num');
+const getCate = require('./func/getCategory');
+const getSizeguide = require('./func/getSizeguide');
 const getProductInfo = require('./getProductInfo');
 let len = 2;
 // csv에서 정보 가져오기

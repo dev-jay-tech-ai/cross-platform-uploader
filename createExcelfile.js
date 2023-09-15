@@ -8,6 +8,7 @@ const detail = require('./detail');
 const csvFile = require('./createImage');
 const brandcode = require('./brandcode');
 const getCate = require('./func/getCategory');
+const getOption = require('./func/getOption');
 const getChecklist = require('./func/getChecklist');
 const getProductInfo = require('./func/getProductInfo');
 const getCateNum = require('./asset/category_num');
@@ -93,12 +94,14 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         if(itOrigin.includes(brand)) origin = '이탈리아'
         
         const { package, boxInc, dustInc } = getChecklist(productInfo, cate)
- 
+        const option = getOption(cate, formColor);
         /** 체크리스트 디버깅 */
         const category = getCateNum(cate); 
+        console.log(linkInfo)
         console.log(cate, category)
         console.log(title)
         console.log(package)
+        console.log(boxInc, dustInc)
         console.log('\n')
 
         const orgDetail = detail
@@ -121,7 +124,7 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         //상세페이지 만들기 [풀제목] [가격] [바잉코멘트] [이미지]
         console.log(num, buyerCode)
         let orgData = [];
-        orgData.push(imgName+' '+total, tmp, imgName+'_0'+'.jpg', addImg.join('\n'), orgDetail, brandcode(brand), cate, productInfo);
+        orgData.push(imgName+' '+total, tmp, imgName+'_0'+'.jpg', addImg.join('\n'), orgDetail, brandcode(brand), cate, productInfo, option);
         totalData.push(orgData);
       } 
     })
@@ -144,6 +147,11 @@ fs.createReadStream('csv/'+csvFile+'.csv')
           worksheet.getCell(`U${i}`).value = data[5]; // 브랜드
           worksheet.getCell(`Z${i}`).value = data[5]; // 수입사
           worksheet.getCell(`AT${i}`).value = data[7]; // 상품정보제공
+          if(data[8]) {
+            worksheet.getCell(`H${i}`).value = '단독형'; // 옵션(단독형, 조합형)
+            worksheet.getCell(`I${i}`).value = '컬러\n사이즈'; // 옵션
+            worksheet.getCell(`J${i}`).value = data[8]+'\nOne Size';; // 옵션
+          }
         })
         return workbook.xlsx.writeFile(`excel/cafe_${csvFile}.xlsx`);
     })
