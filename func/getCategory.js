@@ -2,13 +2,12 @@ module.exports = (name) => {
   let cate = '';
   if(name.includes('남성')) {
     if(name.includes('토트')) cate = 50000647
-    if(name.includes('크로스백')) cate = 50000648
+    if(name.includes('크로스백') || name.includes('메신저')) cate = 50000648
     if(name.includes('클러치') || name.includes('파우치')) cate = 50000649
     if(name.includes('브리프') || name.includes('서류')) cate = 50000650
     if(name.includes('백팩') || name.includes('배낭')) cate = 50000651
     if(name.includes('범백') || name.includes('벨트백') || name.includes('힙색')) cate = 50000652
-    if(name.includes('머니클립')) cate = 50000661
-    if(name.includes('동전') || name.includes('코인')) cate = 50000664
+
     // 남성신발
     if(name.includes('슬립온')) cate = 50000783
     if(name.includes('MOCASSIN')) cate = 50000784
@@ -59,7 +58,8 @@ module.exports = (name) => {
     if(name.includes('지갑') || name.includes('월렛')) {
       if(name.includes('반지갑') || name.includes('폴딩') || name.includes('콤팩트')) cate = 50003985
       if(name.includes('장지갑')) cate = 50003987
-    }
+    } 
+
     if(name.includes('스카프')) cate = 50004010
   } else {
     // 여성
@@ -86,7 +86,7 @@ module.exports = (name) => {
       else cate = 50000639 // 버킷 숄더 바스켓 복조리
     }
     if(name.includes('숄더백')) cate = 50000639
-    if(name.includes('크로스백')) cate = 50000641
+    if(name.includes('크로스백') || name.includes('메신저')) cate = 50000641
     if(name.includes('클러치')) cate = 50000642
     if(name.includes('파우치')) cate = 50000643
     if(name.includes('넥')) {
@@ -171,10 +171,13 @@ module.exports = (name) => {
       if(name.includes('비키니')) cate = 50003056
     }
     if(name.includes('캡')) cate = 50003990 // 야구모자 일반캡
+    if(name.includes('머니클립')) cate = 50000661
+    if(name.includes('동전') || name.includes('코인')) cate = 50000664
     if(name.includes('지갑') || name.includes('월렛')) {
       if(name.includes('반지갑') || name.includes('폴딩') || name.includes('콤팩트')) cate = 50003982
       if(name.includes('장지갑')) cate = 50003984
       if(name.includes('키') || name.includes('키링')) cate = 50000663
+      else cate = 50003982
     }
     if(name.includes('양말') || name.includes('삭스')) {
       if(name.includes('미드') || name.includes('하이')) cate = 50003997 // 니삭스

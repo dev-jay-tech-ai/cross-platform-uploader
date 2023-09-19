@@ -1,27 +1,50 @@
 const isSortedAscending = (arr) => {
   for (let i = 0; i < arr.length - 1; i++) {
-    if (arr[i] > arr[i + 1]) {
-      return false;
-    }
+    if (arr[i] > arr[i + 1]) return false;
+
   }
   return true;
 };
 
 const isWithinRange = (arr, minMax) => {
-  const { min, max } = minMax;
+  const min = minMax[0];
+  const max = minMax[1];
   for (let i = 0; i < arr.length; i++) {
-    if (arr[i] < min || arr[i] > max) {
+    if (arr[i] <= min || arr[i] >= max) {
       return false;
     }
   }
   return true;
 };
 
+const areAllIntegers = (arr) => {
+  return arr.every((element) => Number.isInteger(element));
+};
+
 const areAllNumbers = (arr) => {
-  for(let i=0; arr.length; i++) {
-    if(arr[i] === true) return false
+  for (ele in arr) {
+    if(isNaN(ele) === true) return false
   }
   return true;
 };
 
-module.exports = { isSortedAscending, isWithinRange, areAllNumbers }
+const sizeChecker = (arr) => {
+  let sizeInfo = 0;
+  // console.log(arr, '사이즈 정보 확인 중 ...  ')
+  if(areAllNumbers(arr)) {
+    if(isSortedAscending(arr)) {
+      if(areAllIntegers(arr)) {
+        if(isWithinRange(arr,[0,12])) sizeInfo = 'ETC'
+      } else  {
+        if(isWithinRange(arr,[34,60])) sizeInfo = 'IT'
+        else if(isWithinRange(arr,[4,16])) sizeInfo = 'UK'
+      }
+    } else {
+      // console.log('순차적이지 않다')
+      sizeInfo = 2
+    } 
+  }
+  return sizeInfo;
+}
+
+module.exports = { isSortedAscending, isWithinRange, areAllNumbers, areAllIntegers, sizeChecker }

@@ -10,6 +10,7 @@ const brandcode = require('./brandcode');
 const getCate = require('./func/getCategory');
 const getOption = require('./func/getOption');
 const getChecklist = require('./func/getChecklist');
+const getSizeguide = require('./func/getSizeguide');
 const getProductInfo = require('./func/getProductInfo');
 const getCateNum = require('./asset/category_num');
 let len = 2;
@@ -103,6 +104,7 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         console.log(package)
         console.log(boxInc, dustInc)
         console.log('\n')
+        const sizeTemplate = getSizeguide(name, formSize, brand, cate)
 
         const orgDetail = detail
         .replace('*****오리지널제목*****', title)
@@ -114,11 +116,13 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         .replace('//구성품//', package)
         .replace('//브랜드박스//', boxInc)
         .replace('//더스트백//', dustInc)
+        .replace('///사이즈템플렛///', sizeTemplate)
         .replaceAll('*****브랜드*****', brand)
         .replaceAll('*****이미지*****', imgArr.join(''))
         .replaceAll('*****사이즈*****', formSize)
         .replaceAll('*****색상*****', formColor)
         .replaceAll('//브랜드//', brand);
+        
   
         //정보 : [0 상품명, 1 판매가, 2 대표이미지파일명, 3 추가이미지파일명, 4 상품상세정보, 5 브랜드]
         //상세페이지 만들기 [풀제목] [가격] [바잉코멘트] [이미지]

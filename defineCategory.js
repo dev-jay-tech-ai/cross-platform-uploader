@@ -5,7 +5,7 @@ const csvFile = '2023-09-10_161349(200)';
 const getCateNum = require('./asset/category_num');
 const getCate = require('./func/getCategory');
 const getSizeguide = require('./func/getSizeguide');
-const getProductInfo = require('./getProductInfo');
+const getProductInfo = require('./func/getProductInfo');
 let len = 2;
 // csv에서 정보 가져오기
 fs.createReadStream('csv/'+csvFile+'.csv')
