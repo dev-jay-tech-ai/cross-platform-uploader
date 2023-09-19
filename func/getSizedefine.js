@@ -6,10 +6,8 @@ module.exports = (size) => {
     // 구분하자 
     // 제너럴사이즈 0 국가사이즈 1  치수 2
     let country = ['IT', 'EU', 'UK', 'US']
-    let general = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL']
     let sequence = ['~', '-']
     let measure = ['CM', '*', 'X']
-    let countryUnit = ''
 
     const pattern = /[\/+,&\s]+(?![\d.])/g;
     const generalSizeRegex = /\bXXS\b|\bXS\b|\bS\b|\bM\b|\bL\b|\bXL\b|\bXXL\b/g;
@@ -27,14 +25,12 @@ module.exports = (size) => {
       // 배열이 순차적인 경우
       sizeInfo = sizeChecker(_sizeArray)
     };
-
     if(sizeInfo === 0)  { // 알수없음 0 으로 분류된 것 따로 정리
       const sizeOptArr = sizeOrg.replaceAll(pattern,'').split(/[\/+,&\s]/);
       const sizeOpt = sizeOptArr.map((s) => s.replaceAll(/[ ]/g, '')).filter((s) => s !== '');
       const sizeNumArray = sizeOpt.map((s) => s.replaceAll('​', '').trim()).filter((s) => !isNaN(s)).map((s) => Number(s))
       sizeInfo = sizeChecker(sizeNumArray)
     }
-  
     // console.log('사이즈 :', sizeOrg)
     // console.log('사이즈 정보 :',sizeInfo)
     return sizeInfo;

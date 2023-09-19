@@ -1,9 +1,6 @@
 module.exports = (gender, sizeType, brand, div) => {
-  // if(sizeType === 0) return '정보없음';
-  // else if(sizeType === 1) return '제너럴사이즈'
-  // else if(sizeType === 2) return '치수'
-  // else return sizeType
   const basic = require('../asset/template/basic')
+  const measure = require('../asset/template/measure')
   const general = require(`../asset/template/${gender}_general`);
   const italy = require(`../asset/template/${gender}_italy`);
   const etc = require(`../asset/template/${gender}_etc`);
@@ -15,7 +12,10 @@ module.exports = (gender, sizeType, brand, div) => {
   const shoeTemp = require('../asset/template/shoes_temp');
   const { _us, _uk, _eu, _burberry, _choo, _maison, _acne, _mcqueen, _tb, _etro, _btv } = require('../asset/template/m_shoes_size_chart');
   const { w_uk, w_eu, w_goldengoose } = require('../asset/template/w_shoes_size_chart');
-
+  // if(sizeType === 0) return '정보없음';
+  // else if(sizeType === 1) return '제너럴사이즈'
+  // else if(sizeType === 2) return '치수'
+  // else return sizeType
   if(div === '남성의류') { 
     if(sizeType === 1) {
       if(brand.includes('토리버치')) return tory+clothing;
@@ -53,19 +53,16 @@ module.exports = (gender, sizeType, brand, div) => {
       else return clothing;
     }
   } else if(div === '여성슈즈') { 
-    if(brand = '페라가모') return shoeTemp(brand,_us)+shoes;
+    if(brand === '페라가모') return shoeTemp(brand,w_us)+shoes;
     else {
       if(sizeType === 'EU') {
         if(brand.includes('골든구스')) return shoeTemp(brand,w_goldengoose)+shoes;
         else return shoeTemp(brand,w_eu)+shoes;
       } else if(sizeType === 'UK') return shoeTemp(brand,w_uk)+shoes;
-      else return shoes;
+      else return shoeTemp(brand,w_eu)+shoes;
     }
 
-  } else if(div === '벨트') { // 벭트
-    return belt;
-  } else {
-    // 기타에서 분류해서 나누기 가방 etc..
-    return basic;
-  }
+  } else if(div === '벨트') return belt;
+  else if(div === '가방' || div === '지갑') return measure;
+  else return basic;
 }

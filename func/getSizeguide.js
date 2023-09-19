@@ -4,7 +4,9 @@ module.exports = (title, size, brand, category) => {
     category_m_shoes,
     category_w_cloth,
     category_w_shoes,
-    category_belt 
+    category_bag,
+    category_belt,
+    category_wallet
   } = require('../asset/category_divide')
   const getSizedefine = require('./getSizedefine');
   const getSizetemplate = require('./getSizetemplate');
@@ -13,10 +15,12 @@ module.exports = (title, size, brand, category) => {
   // 카테고리를 통해서 추출
   let div = ''
   if(category_m_cloth.includes(category)) div = '남성의류'
-  else if (category_m_shoes.includes(category)) div = '남성슈즈'
-  else if (category_w_cloth.includes(category)) div = '여성의류'
-  else if (category_w_shoes.includes(category)) div = '여성슈즈'
-  else if (category_belt.includes(category)) div = '벨트'
+  else if(category_m_shoes.includes(category)) div = '남성슈즈'
+  else if(category_w_cloth.includes(category)) div = '여성의류'
+  else if(category_w_shoes.includes(category)) div = '여성슈즈'
+  else if(category_bag.includes(category)) div = '가방'
+  else if(category_belt.includes(category)) div = '벨트'
+  else if(category_wallet.includes(category)) div = '지갑'
   else div = '기타'
   
   let gender = div.includes('남성') ? 'm' : 'w';

@@ -256,7 +256,10 @@ module.exports = (name) => {
     if(name.includes('에코백')) cate = 50015340  
     if(name.includes('캡') || name.includes('볼캡') || name.includes('베이스볼')) cate = 50003990
     if(name.includes('스카프')) cate = 50004010
-    if(name.includes('트윌') || name.includes('방도')) cate = 50004011
+    if(name.includes('스카프')) {
+      if(name.includes('트윌') || name.includes('방도')) cate = 50004011
+    }
+    if(name.includes('방도')) cate = 50004011
   }
   return cate;
 }

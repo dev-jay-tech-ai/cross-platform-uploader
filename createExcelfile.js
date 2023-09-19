@@ -5,6 +5,7 @@ const results = []; // 'Link', 'Name', 'Comments', 'Images'
 const totalData = [];
 const { PythonShell } = require('python-shell');
 const detail = require('./detail');
+const detail_electronics = require('./detail_electronics');
 const csvFile = require('./createImage');
 const brandcode = require('./brandcode');
 const getCate = require('./func/getCategory');
@@ -12,7 +13,8 @@ const getOption = require('./func/getOption');
 const getChecklist = require('./func/getChecklist');
 const getSizeguide = require('./func/getSizeguide');
 const getProductInfo = require('./func/getProductInfo');
-const getCateNum = require('./asset/category_num');
+const { category_electronics } = require('./asset/category_divide')
+
 let len = 2;
 // csv에서 정보 가져오기
 fs.createReadStream('csv/'+csvFile+'.csv')
@@ -35,8 +37,8 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         const formEtc = form[4]&&form[4].split(':')[1].trim().replaceAll('\n','');
         const title = result.Name;
         const cateInfo  = getCate(title);
-        const cate = cateInfo !== 0 ? cateInfo : formEtc&&formEtc.includes('ㅇ')?50000815:50000651; 
-        const productInfo = getProductInfo(cate);
+        const category = cateInfo !== 0 ? cateInfo : formEtc&&formEtc.includes('ㅇ')?50000815:50000651; 
+        const productInfo = getProductInfo(category);
 
         const brand = org[0];
         const num = org[org.length-1]; // result.Images
@@ -94,19 +96,18 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         const itOrigin = ['펜디','토즈','로저비비에'];
         if(itOrigin.includes(brand)) origin = '이탈리아'
         
-        const { package, boxInc, dustInc } = getChecklist(productInfo, cate)
-        const option = getOption(cate, formColor);
+        const { package, boxInc, dustInc } = getChecklist(productInfo, category, brand)
+        const option = getOption(category, formColor);
         /** 체크리스트 디버깅 */
-        const category = getCateNum(cate); 
         console.log(linkInfo)
-        console.log(cate, category)
+        console.log(category)
         console.log(title)
         console.log(package)
         console.log(boxInc, dustInc)
         console.log('\n')
-        const sizeTemplate = getSizeguide(name, formSize, brand, cate)
-
-        const orgDetail = detail
+        const sizeTemplate = getSizeguide(name, formSize, brand, category);
+        const template = category_electronics.includes(category) ? detail_electronics : detail;
+        const orgDetail = template
         .replace('*****오리지널제목*****', title)
         .replace('*****바잉팀코멘트*****', formPrice+'\n'+formColor+'\n'+formSize+'\n'+formEtc+'\n')
         .replace('*****바잉가격*****', '바잉가격코드: '+ buyerCode)
@@ -122,13 +123,11 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         .replaceAll('*****사이즈*****', formSize)
         .replaceAll('*****색상*****', formColor)
         .replaceAll('//브랜드//', brand);
-        
-  
         //정보 : [0 상품명, 1 판매가, 2 대표이미지파일명, 3 추가이미지파일명, 4 상품상세정보, 5 브랜드]
         //상세페이지 만들기 [풀제목] [가격] [바잉코멘트] [이미지]
         console.log(num, buyerCode)
         let orgData = [];
-        orgData.push(imgName+' '+total, tmp, imgName+'_0'+'.jpg', addImg.join('\n'), orgDetail, brandcode(brand), cate, productInfo, option);
+        orgData.push(imgName+' '+total, tmp, imgName+'_0'+'.jpg', addImg.join('\n'), orgDetail, brandcode(brand), category, productInfo, option);
         totalData.push(orgData);
       } 
     })

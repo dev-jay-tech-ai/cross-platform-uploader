@@ -4,38 +4,40 @@ const isSortedAscending = (arr) => {
 
   }
   return true;
-};
+}
 
 const isWithinRange = (arr, minMax) => {
   const min = minMax[0];
   const max = minMax[1];
   for (let i = 0; i < arr.length; i++) {
-    if (arr[i] <= min || arr[i] >= max) {
+    if (arr[i] < min || arr[i] > max) {
       return false;
     }
   }
   return true;
-};
+}
 
 const areAllIntegers = (arr) => {
   return arr.every((element) => Number.isInteger(element));
-};
+}
 
 const areAllNumbers = (arr) => {
   for (ele in arr) {
     if(isNaN(ele) === true) return false
   }
   return true;
-};
+}
 
 const sizeChecker = (arr) => {
+  console.log('사이즈 기준표',arr)
   let sizeInfo = 0;
-  // console.log(arr, '사이즈 정보 확인 중 ...  ')
   if(areAllNumbers(arr)) {
     if(isSortedAscending(arr)) {
       if(areAllIntegers(arr)) {
-        if(isWithinRange(arr,[0,12])) sizeInfo = 'ETC'
-      } else  {
+        if(isWithinRange(arr,[0,12])) sizeInfo = 'ETC';
+        else if(isWithinRange(arr,[34,60])) sizeInfo = 'IT';
+        else if(isWithinRange(arr,[4,16])) sizeInfo = 'UK';
+      } else {
         if(isWithinRange(arr,[34,60])) sizeInfo = 'IT'
         else if(isWithinRange(arr,[4,16])) sizeInfo = 'UK'
       }
