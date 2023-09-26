@@ -10,10 +10,11 @@ const csvFile = require('./createImage');
 const brandcode = require('./brandcode');
 const getCate = require('./func/getCategory');
 const getOption = require('./func/getOption');
+const getEtcInfo = require('./func/getEtcInfo');
 const getChecklist = require('./func/getChecklist');
 const getSizeguide = require('./func/getSizeguide');
 const getProductInfo = require('./func/getProductInfo');
-const { category_electronics } = require('./asset/category_divide')
+const { category_electronics, category_m_shoes, category_w_shoes, category_bag } = require('./asset/category_divide')
 
 let len = 2;
 // csv에서 정보 가져오기
@@ -93,9 +94,9 @@ fs.createReadStream('csv/'+csvFile+'.csv')
           imgArr.push(imgEle.replace('*****이미지*****', imgList[j]))
         } 
         let origin = '이탈리아 및 그 외 국가 oem 생산';
-        const itOrigin = ['펜디','토즈','로저비비에'];
+        const itOrigin = ['펜디','토즈','로저비비에','발렌티노','페라가모','알렉산더맥퀸'];
         if(itOrigin.includes(brand)) origin = '이탈리아'
-        
+        if(brand.includes('페라가모') && category_bag.includes(category)) origin = '이탈리아'
         const { package, boxInc, dustInc } = getChecklist(productInfo, category, brand)
         const option = getOption(category, formColor);
         /** 체크리스트 디버깅 */
@@ -107,12 +108,15 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         console.log('\n')
         const sizeTemplate = getSizeguide(name, formSize, brand, category);
         const template = category_electronics.includes(category) ? detail_electronics : detail;
+        const buyerInitial = title.split(' ')[0];
+        const formetc = getEtcInfo(formEtc, buyerInitial);        
         const orgDetail = template
-        .replace('*****오리지널제목*****', title)
-        .replace('*****바잉팀코멘트*****', formPrice+'\n'+formColor+'\n'+formSize+'\n'+formEtc+'\n')
-        .replace('*****바잉가격*****', '바잉가격코드: '+ buyerCode)
-        .replace('*****카페링크*****', linkInfo)
-        .replace('//신발치수//', '굽높이 써라잉')
+        .replace('*****오리지널제목*****', ''/*title*/)
+        .replace('*****바잉팀코멘트*****', /*formPrice+'\n'+formColor+'\n'+formSize+'\n'+formEtc+'\n'*/'')
+        .replace('*****바잉가격*****', ''/*'바잉가격코드: '+ buyerCode*/)
+        .replace('*****카페링크*****', ''/*linkInfo*/)
+        .replace('//신발치수//', formetc.includes('굽높이:')? formetc :'굽높이 써라잉')
+        .replace('//바이어스펙//', formetc.includes('** 모델사이즈:')? formetc :'')
         .replace('//원산지표기//', origin)
         .replace('//구성품//', package)
         .replace('//브랜드박스//', boxInc)
@@ -125,6 +129,7 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         .replaceAll('//브랜드//', brand);
         //정보 : [0 상품명, 1 판매가, 2 대표이미지파일명, 3 추가이미지파일명, 4 상품상세정보, 5 브랜드]
         //상세페이지 만들기 [풀제목] [가격] [바잉코멘트] [이미지]
+        if(category_m_shoes.includes(category) || category_w_shoes.includes(category)) orgDetail.replace('//신발치수//', '')
         console.log(num, buyerCode)
         let orgData = [];
         orgData.push(imgName+' '+total, tmp, imgName+'_0'+'.jpg', addImg.join('\n'), orgDetail, brandcode(brand), category, productInfo, option);

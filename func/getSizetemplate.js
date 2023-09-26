@@ -6,12 +6,15 @@ module.exports = (gender, sizeType, brand, div) => {
   const etc = require(`../asset/template/${gender}_etc`);
   const tory = require('../asset/template/m_tory');
   const fr = require('../asset/template/w_fr');
+  const fr_ch = require('../asset/template/w_fr_ch');
+  const w_etc_odd = require('../asset/template/w_etc_odd');
   const belt = require('../asset/template/belt');
+  const goldengoose = require('../asset/template/goldengoose');
   const clothing = require('../asset/template/clothing');
   const shoes = require('../asset/template/shoes');
   const shoeTemp = require('../asset/template/shoes_temp');
   const { _us, _uk, _eu, _burberry, _choo, _maison, _acne, _mcqueen, _tb, _etro, _btv } = require('../asset/template/m_shoes_size_chart');
-  const { w_uk, w_eu, w_goldengoose } = require('../asset/template/w_shoes_size_chart');
+  const { w_eu, w_us, w_goldengoose } = require('../asset/template/w_shoes_size_chart');
   // if(sizeType === 0) return '정보없음';
   // else if(sizeType === 1) return '제너럴사이즈'
   // else if(sizeType === 2) return '치수'
@@ -43,20 +46,24 @@ module.exports = (gender, sizeType, brand, div) => {
     }
 
   } else if(div === '여성의류') {  
-    if(brand === '이자벨마랑' || brand === '샤넬') return fr+clothing;
+    if(brand === '이자벨마랑') return fr+clothing;
+    else if(brand === '샤넬') return fr_ch+clothing;
+    else if(brand === '몽클레어' ||  brand === '몽크레어') return w_etc_odd+clothing;
     else {
       if(sizeType === 1) {
         return general+clothing;
       } else if(sizeType === 'IT') return italy+clothing;
-      else if(sizeType === 'ETC') return etc+clothing;
-      else if(sizeType === 'FR') return fr+clothing;
+      else if(sizeType === 'ETC') {
+        if(brand === '산드로') return w_etc_odd+clothing;
+        else return etc+clothing;
+      } else if(sizeType === 'FR') return fr+clothing;
       else return clothing;
     }
   } else if(div === '여성슈즈') { 
     if(brand === '페라가모') return shoeTemp(brand,w_us)+shoes;
     else {
       if(sizeType === 'EU') {
-        if(brand.includes('골든구스')) return shoeTemp(brand,w_goldengoose)+shoes;
+        if(brand.includes('골든구스')) return shoeTemp(brand,w_goldengoose)+goldengoose;
         else return shoeTemp(brand,w_eu)+shoes;
       } else if(sizeType === 'UK') return shoeTemp(brand,w_uk)+shoes;
       else return shoeTemp(brand,w_eu)+shoes;

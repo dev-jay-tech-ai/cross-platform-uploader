@@ -61,6 +61,13 @@ module.exports = (name) => {
     } 
 
     if(name.includes('스카프')) cate = 50004010
+
+    if(name.includes('비니')) cate = 50000546
+    if(name.includes('안경') || name.includes('선글라스')) cate = 50000554 
+    if(name.includes('장갑') || name.includes('글로브') || name.includes('글러브')) cate = 50000551
+    if(name.includes('목도리') || name.includes('머플러')) cate = 50000565
+    if(name.includes('멀버리') && name.includes('카라')) cate = 50000568
+    
   } else {
     // 여성
     
@@ -109,7 +116,6 @@ module.exports = (name) => {
     if(name.includes('장갑') || name.includes('글로브') || name.includes('글러브')) cate = 50000551
     if(name.includes('목도리') || name.includes('머플러')) cate = 50000565
     if(name.includes('멀버리') && name.includes('카라')) cate = 50000568
-    if(name.includes('안경') || name.includes('선글라스')) cate = 50000554 
 
     if(name.includes('헤어')) {
       if(name.includes('머리띠') || name.includes('밴드')) cate = 50000560

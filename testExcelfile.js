@@ -9,6 +9,8 @@ const brandcode = require('./brandcode');
 const getCate = require('./func/getCategory');
 const getSizeguide = require('./func/getSizeguide');
 const getProductInfo = require('./func/getProductInfo');
+const getEtcInfo = require('./func/getEtcInfo');
+const { category_m_shoes, category_w_shoes } = require('./asset/category_divide')
 const csvFile = '2023-09-10_161349(200)';
 let len = 2;
 // csv에서 정보 가져오기
@@ -32,9 +34,8 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         const formEtc = form[4]&&form[4].split(':')[1].trim().replaceAll('\n','');
         const title = result.Name;
         const cateInfo  = getCate(title);
-        const cate = cateInfo !== 0 ? cateInfo : formEtc&&formEtc.includes('ㅇ')?50000815:50000651; 
-        const productInfo = getProductInfo(cate);
-
+        const category = cateInfo !== 0 ? cateInfo : formEtc&&formEtc.includes('ㅇ')?50000815:50000651; 
+        const productInfo = getProductInfo(category);
         const brand = org[0];
         const num = org[org.length-1]; // result.Images
         const buyerCodeArr = title.split(' ').filter((t) => t.match(/^1000?\d+(\(\d+\))?$/));
@@ -78,6 +79,7 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         } else tmp = 1234500;
         const imgLen = result.Images.split(',').length;
         let addImg = [];
+        
         for(let i=1; i<imgLen; i++) { // 이미지 최대 9개까지 업로드 가능
           if(i<10) addImg.push(imgName + '_' + i + '.jpg');
         }
@@ -87,15 +89,18 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         for(let j=0; j<imgLen; j++) {
           imgArr.push(imgEle.replace('*****이미지*****', imgList[j]))
         } 
-        const sizeTemplate = getSizeguide(name, formSize, brand, cate)
-        console.log(sizeTemplate)
+        const sizeTemplate = getSizeguide(name, formSize, brand, category)
+        const buyerInitial = title.split(' ')[0];
+        const formetc = getEtcInfo(formEtc, buyerInitial);
+        console.log('카테고리: ',category)
 
         const orgDetail = detail
         .replace('*****오리지널제목*****', title)
         .replace('*****바잉팀코멘트*****', formPrice+'\n'+formColor+'\n'+formSize+'\n'+formEtc+'\n')
         .replace('*****바잉가격*****', '바잉가격코드: '+ buyerCode)
         .replace('*****카페링크*****', linkInfo)
-        .replace('//신발치수//', '굽높이 써라잉')
+        .replace('//신발치수//', formetc.includes('굽높이:')? formetc :'굽높이 써라잉')
+        .replace('//바이어스펙//', formetc.includes('** 모델사이즈:')? formetc :'')
         .replaceAll('*****브랜드*****', brand)
         .replaceAll('*****이미지*****', imgArr.join(''))
         .replaceAll('*****사이즈*****', formSize)
@@ -104,13 +109,14 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         //정보 : [0 상품명, 1 판매가, 2 대표이미지파일명, 3 추가이미지파일명, 4 상품상세정보, 5 브랜드]
         //상세페이지 만들기 [풀제목] [가격] [바잉코멘트] [이미지]
         // console.log(num, buyerCode)
+        if(category_m_shoes.includes(category) || category_w_shoes.includes(category)) orgDetail.replace('//신발치수//', '')
         let orgData = [];
-        orgData.push('(삭제예정) '+total, tmp, imgName+'_0'+'.jpg', addImg.join('\n'), orgDetail, brandcode(brand), cate, productInfo);
+        orgData.push('(삭제예정) '+total, tmp, imgName+'_0'+'.jpg', addImg.join('\n'), orgDetail, brandcode(brand), category, productInfo);
         totalData.push(orgData);
       } 
     })
     // 엑셀 정보 읽고 각자 열에 쓰기
-    /** */
+    /** 
     async function saveExcel () {
     //엑셀 데이터 읽고 워크북 불러오기
     const workbook = new Excel.Workbook();
@@ -156,5 +162,5 @@ fs.createReadStream('csv/'+csvFile+'.csv')
       await saveExcel();
       await pythonPro();
     }
-    process();
+    process();*/
   });
