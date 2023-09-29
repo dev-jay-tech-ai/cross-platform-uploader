@@ -15,6 +15,8 @@ const getChecklist = require('./func/getChecklist');
 const getSizeguide = require('./func/getSizeguide');
 const getProductInfo = require('./func/getProductInfo');
 const { category_electronics, category_m_shoes, category_w_shoes, category_bag } = require('./asset/category_divide')
+const size_guide_tmp = require('./asset/template/size_guide_tmp');
+const size_guide_tmp_goldengoose = require('./asset/template/size_guide_tmp_goldengoose');
 
 let len = 2;
 // csv에서 정보 가져오기
@@ -35,7 +37,7 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         const formPrice = form[1]&&form[1].split(':')[1].trim().replaceAll('\n','');
         const formColor = form[2]&&form[2].split(':')[1].trim().replaceAll('\n','');
         const formSize = form[3]&&form[3].split(':')[1].trim().replaceAll('\n','');
-        const formEtc = form[4]&&form[4].split(':')[1].trim().replaceAll('\n','');
+        const formEtc = form[4]&&form[4].split(':')[1]?.trim().replaceAll('\n','');
         const title = result.Name;
         const cateInfo  = getCate(title);
         const category = cateInfo !== 0 ? cateInfo : formEtc&&formEtc.includes('ㅇ')?50000815:50000651; 
@@ -107,15 +109,23 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         console.log(boxInc, dustInc)
         console.log('\n')
         const sizeTemplate = getSizeguide(name, formSize, brand, category);
-        const template = category_electronics.includes(category) ? detail_electronics : detail;
+        let template = category_electronics.includes(category) ? detail_electronics : detail;
         const buyerInitial = title.split(' ')[0];
         const formetc = getEtcInfo(formEtc, buyerInitial);        
+        if (category_m_shoes.includes(category) || category_w_shoes.includes(category)) {
+          template = template.replace('//신발치수//', formetc.includes('굽높이:') ? '대략'+formetc.replace('굽높이:','')+'cm' : '굽높이 써라잉');
+        } else {
+          template = template.replace('[굽높이]', '');
+          template = template.replace('//신발치수//', '');
+        }        
+        if (brand.includes('골든구스') || brand === '골든구스') template = template.replace('///제품안내탬플릿///', size_guide_tmp_goldengoose);
+        else template = template.replace('///제품안내탬플릿///', size_guide_tmp);
+
         const orgDetail = template
         .replace('*****오리지널제목*****', ''/*title*/)
         .replace('*****바잉팀코멘트*****', /*formPrice+'\n'+formColor+'\n'+formSize+'\n'+formEtc+'\n'*/'')
         .replace('*****바잉가격*****', ''/*'바잉가격코드: '+ buyerCode*/)
         .replace('*****카페링크*****', ''/*linkInfo*/)
-        .replace('//신발치수//', formetc.includes('굽높이:')? formetc :'굽높이 써라잉')
         .replace('//바이어스펙//', formetc.includes('** 모델사이즈:')? formetc :'')
         .replace('//원산지표기//', origin)
         .replace('//구성품//', package)
@@ -129,7 +139,6 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         .replaceAll('//브랜드//', brand);
         //정보 : [0 상품명, 1 판매가, 2 대표이미지파일명, 3 추가이미지파일명, 4 상품상세정보, 5 브랜드]
         //상세페이지 만들기 [풀제목] [가격] [바잉코멘트] [이미지]
-        if(category_m_shoes.includes(category) || category_w_shoes.includes(category)) orgDetail.replace('//신발치수//', '')
         console.log(num, buyerCode)
         let orgData = [];
         orgData.push(imgName+' '+total, tmp, imgName+'_0'+'.jpg', addImg.join('\n'), orgDetail, brandcode(brand), category, productInfo, option);

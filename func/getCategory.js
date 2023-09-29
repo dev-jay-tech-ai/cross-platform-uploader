@@ -86,6 +86,8 @@ module.exports = (name) => {
       if(name.includes('버킷')) cate = 50000639
       if(name.includes('숄더')) cate = 50000639
       */
+      if(name.includes('브리프') || name.includes('서류')) cate = 50000650 // 남성 브리프케이스
+
       if(name.includes('박스')) cate = 50000640
       if(name.includes('토트')) cate = 50000640
       if(name.includes('보스턴')) cate = 50000653
@@ -179,6 +181,10 @@ module.exports = (name) => {
     if(name.includes('캡')) cate = 50003990 // 야구모자 일반캡
     if(name.includes('머니클립')) cate = 50000661
     if(name.includes('동전') || name.includes('코인')) cate = 50000664
+
+    // 패션쥬얼리 <> 링과 이어링 카테고리 구분
+    if(/**name.includes('링') || */name.includes('반지')) cate = 50004155
+
     if(name.includes('지갑') || name.includes('월렛')) {
       if(name.includes('반지갑') || name.includes('폴딩') || name.includes('콤팩트')) cate = 50003982
       if(name.includes('장지갑')) cate = 50003984
@@ -237,8 +243,6 @@ module.exports = (name) => {
       else cate = 50006188
     }
 
-    // 패션쥬얼리 <> 링과 이어링 카테고리 구분
-    if(/**name.includes('링') || */name.includes('반지')) cate = 50004155
     if(name.includes('귀걸이') || name.includes('귀찌') || 
       name.includes('이어링') || name.includes('이어커프') || 
       name.includes('이어링') || name.includes('커프스')) cate = 50004164

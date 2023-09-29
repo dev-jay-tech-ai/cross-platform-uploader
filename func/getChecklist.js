@@ -13,6 +13,10 @@ module.exports = (productInfo, cate, brand) => {
       package = '본품+더스트백';
       boxInc = '브랜드 박스 포함□ 미포함■';
       dustInc = '더스트백 포함■ 미포함□';
+    } else if(brand.includes('미우미우')) {
+      package = '본품+하드케이스';
+      boxInc = '브랜드 박스 포함■ 미포함□';
+      dustInc = '더스트백 포함□ 미포함■';
     }
   } else if(category_wallet.includes(cate)) { // 자갑
     package = '본품+하드케이스';
