@@ -136,6 +136,7 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         .replaceAll('*****이미지*****', imgArr.join(''))
         .replaceAll('*****사이즈*****', formSize)
         .replaceAll('*****색상*****', formColor)
+        .replaceAll('//상품명//', total);
         .replaceAll('//브랜드//', brand);
         //정보 : [0 상품명, 1 판매가, 2 대표이미지파일명, 3 추가이미지파일명, 4 상품상세정보, 5 브랜드]
         //상세페이지 만들기 [풀제목] [가격] [바잉코멘트] [이미지]
