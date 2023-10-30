@@ -5,16 +5,19 @@ const results = []; // 'Link', 'Name', 'Comments', 'Images'
 const totalData = [];
 const { PythonShell } = require('python-shell');
 const detail = require('./detail');
-const detail_electronics = require('./detail_electronics');
+const detail_electronics = require('./detail_nonforeign');
 const csvFile = require('./createImage');
 const brandcode = require('./brandcode');
 const getCate = require('./func/getCategory');
+const getOrigin = require('./func/getOrigin');
 const getOption = require('./func/getOption');
 const getEtcInfo = require('./func/getEtcInfo');
 const getChecklist = require('./func/getChecklist');
 const getSizeguide = require('./func/getSizeguide');
+const getBuyerPrice = require('./func/getBuyerPrice');
 const getProductInfo = require('./func/getProductInfo');
-const { category_electronics, category_m_shoes, category_w_shoes, category_bag } = require('./asset/category_divide')
+const getPriceFormula = require('./func/getPriceFormula');
+const { category_swim, category_electronics, category_m_shoes, category_w_shoes, category_bag } = require('./asset/category_divide')
 const size_guide_tmp = require('./asset/template/size_guide_tmp');
 const size_guide_tmp_goldengoose = require('./asset/template/size_guide_tmp_goldengoose');
 
@@ -32,11 +35,10 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         const orgarr = result.Name.replaceAll(/[\{\}\[\]\/?.,;:|\*~`!^\-_+<>@\#$%&\\\=\\'\"]/gi,'').split(' ');
         const org = orgarr.slice(1,orgarr.length);
         const string = orgarr.slice(2,orgarr.length-1).join(' ');
-        let name = '';
         const form = result.Comments.split('■');
         const formPrice = form[1]&&form[1].split(':')[1].trim().replaceAll('\n','');
         const formColor = form[2]&&form[2].split(':')[1].trim().replaceAll('\n','');
-        const formSize = form[3]&&form[3].split(':')[1].trim().replaceAll('\n','');
+        const formSize = form[3]&&form[3].split(':')[1]?.trim().replaceAll('\n','');
         const formEtc = form[4]&&form[4].split(':')[1]?.trim().replaceAll('\n','');
         const title = result.Name;
         const cateInfo  = getCate(title);
@@ -45,45 +47,21 @@ fs.createReadStream('csv/'+csvFile+'.csv')
 
         const brand = org[0];
         const num = org[org.length-1]; // result.Images
-        const buyerCodeArr = title.split(' ').filter((t) => t.match(/^1000?\d+(\(\d+\))?$/));
-        const getByerPrice = (code) => {
-          if(code.includes('(')) {
-            const arr = code.split('(');
-            const ex1 = code.match(/\((\d+)\)/)[1];
-            const ex2 = arr[1].replace(')','');
-            const num = arr[0].includes('1000') ? arr[0].replace('1000','') : arr[0].replace('100','')
-            const result = Number(num)-(Number(ex1)/100 * Number(num));
-            const numUnit = arr[0].includes('1000') ? '1000' : '100';
-            if(ex1 === ex2) return numUnit+result;
-          } else return code; 
-        }
-        const buyerCode = buyerCodeArr.length > 0 ? getByerPrice(buyerCodeArr[buyerCodeArr.length-1]) : '';
+        const buyerCodeArr = title.split(' ');
+        console.log('바이어코드',buyerCodeArr);
+        const buyingPrice = getBuyerPrice(buyerCodeArr[buyerCodeArr.length-1]);
+        const buyerCode = buyerCodeArr.length > 0 ? buyingPrice : '';
+        let name = '';
         if(string.includes('정가')) {
           name = string.slice(0, string.indexOf('정가'));
-          price = string.slice(string.indexOf('정가'),string.length);
         } else if (string.includes('정상가')) {
           name = string.slice(0, string.indexOf('정상가'));
-          price = string.slice(string.indexOf('정상가'),string.length);
         } else {
           name = string.slice(0, string.indexOf('모포'));
-          price = string.slice(string.indexOf('모포'),string.length);
         }
         name = name.replace(formColor&&formColor.slice(0, formColor.length-1),'');
         const total = brand + ' ' + name + '/ ' + formColor + ' ' + buyerCode;
-        let tmp;
-        if(formPrice !== undefined) {
-          if(formPrice.includes('만') && formPrice.includes('천')) {
-            const mil = formPrice.slice(0,formPrice.indexOf('만'));
-            const thou = formPrice.slice(formPrice.indexOf('만')+1,formPrice.indexOf('천'));
-            tmp = mil+thou+'000';
-          } else if (formPrice.includes('만')) {
-            const mil = formPrice.slice(0,formPrice.indexOf('만'));
-            tmp = mil+'0000';
-          } else {
-            tmp = formPrice;
-          }
-          tmp = tmp.replace(/[^0-9]/g,'');
-        } else tmp = 1234500;
+        const price = getPriceFormula(formPrice);
         const imgLen = result.Images.split(',').length;
         let addImg = [];
         for(let i=1; i<imgLen; i++) { // 이미지 최대 9개까지 업로드 가능
@@ -95,10 +73,7 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         for(let j=0; j<imgLen; j++) {
           imgArr.push(imgEle.replace('*****이미지*****', imgList[j]))
         } 
-        let origin = '이탈리아 및 그 외 국가 oem 생산';
-        const itOrigin = ['펜디','토즈','로저비비에','발렌티노','페라가모','알렉산더맥퀸'];
-        if(itOrigin.includes(brand)) origin = '이탈리아'
-        if(brand.includes('페라가모') && category_bag.includes(category)) origin = '이탈리아'
+        const origin = getOrigin(brand, category, category_bag);
         const { package, boxInc, dustInc } = getChecklist(productInfo, category, brand)
         const option = getOption(category, formColor);
         /** 체크리스트 디버깅 */
@@ -109,7 +84,7 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         console.log(boxInc, dustInc)
         console.log('\n')
         const sizeTemplate = getSizeguide(name, formSize, brand, category);
-        let template = category_electronics.includes(category) ? detail_electronics : detail;
+        let template = category_electronics.includes(category) || category_swim.includes(category) ? detail_electronics : detail;
         const buyerInitial = title.split(' ')[0];
         const formetc = getEtcInfo(formEtc, buyerInitial);        
         if (category_m_shoes.includes(category) || category_w_shoes.includes(category)) {
@@ -136,13 +111,13 @@ fs.createReadStream('csv/'+csvFile+'.csv')
         .replaceAll('*****이미지*****', imgArr.join(''))
         .replaceAll('*****사이즈*****', formSize)
         .replaceAll('*****색상*****', formColor)
-        .replaceAll('//상품명//', total);
+        .replaceAll('//상품명//', title)
         .replaceAll('//브랜드//', brand);
         //정보 : [0 상품명, 1 판매가, 2 대표이미지파일명, 3 추가이미지파일명, 4 상품상세정보, 5 브랜드]
         //상세페이지 만들기 [풀제목] [가격] [바잉코멘트] [이미지]
-        console.log(num, buyerCode)
+        console.log('바이어코드 ',buyingPrice, buyerCode)
         let orgData = [];
-        orgData.push(imgName+' '+total, tmp, imgName+'_0'+'.jpg', addImg.join('\n'), orgDetail, brandcode(brand), category, productInfo, option);
+        orgData.push(imgName+' '+total, price, imgName+'_0'+'.jpg', addImg.join('\n'), orgDetail, brandcode(brand), category, productInfo, option);
         totalData.push(orgData);
       } 
     })

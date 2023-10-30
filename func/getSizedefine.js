@@ -21,9 +21,9 @@ module.exports = (size) => {
       const delimiter = /[~-]/; // Match either '~' or '-'
       const _size = sizeOrg.split(delimiter).join(' ');
       const numberRegex = /[0-9]+(?:\.[0-9]+)?/g;
-      const _sizeArray = _size.match(numberRegex).map(Number);
+      const _sizeArray = _size?.match(numberRegex)?.map(Number);
       // 배열이 순차적인 경우
-      sizeInfo = sizeChecker(_sizeArray)
+      sizeInfo = _sizeArray ? sizeChecker(_sizeArray) : '';
     };
     if(sizeInfo === 0)  { // 알수없음 0 으로 분류된 것 따로 정리
       const sizeOptArr = sizeOrg.replaceAll(pattern,'').split(/[\/+,&\s]/);

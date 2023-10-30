@@ -2,6 +2,8 @@ module.exports = (num) => {
   // console.log('카테고리 번호:', num)
   const categoryNum = {
     2007158 : [ // 의류
+      50000811, 
+      50008960,
       50002337,
       50001588,
       50004590,

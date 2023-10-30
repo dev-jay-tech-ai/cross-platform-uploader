@@ -44,7 +44,7 @@ const crawler = async () => {
     const results = [];
     let pageNum = 1;
     let totalqty = 0;
-    while(pageNum <= 2) { // 1page부터 시작 (0 page부터 아님)
+    while(pageNum <= 5) { // 1page부터 시작 (0 page부터 아님)
       await page.goto(cafeUrl+pageNum);
       const frame = await iframe(page, 'cafe_main');
       await frame.waitForTimeout('ul.article-album-sub')

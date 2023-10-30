@@ -5,9 +5,15 @@ module.exports = (productInfo, cate, brand) => {
   let dustInc = '더스트백 포함□ 미포함■'
 
   if(productInfo === '2315292') { // 신발
-    package = '본품+더스트백+하드케이스'; 
-    boxInc = '브랜드 박스 포함■ 미포함□';
-    dustInc = '더스트백 포함■ 미포함□';
+    if(brand.includes('프라다') || brand.includes('미우미우')) {
+      package = '본품+하드케이스';
+      boxInc = '브랜드 박스 포함■ 미포함□';
+      dustInc = '더스트백 포함□ 미포함■';
+    } else {
+      package = '본품+더스트백+하드케이스';
+      boxInc = '브랜드 박스 포함■ 미포함□';
+      dustInc = '더스트백 포함■ 미포함□';
+    }
   } else if(category_bag.includes(cate)) { // 가방
     if(!brand.includes('롱샴') && !brand.includes('토리버치')) {
       package = '본품+더스트백';
@@ -17,7 +23,7 @@ module.exports = (productInfo, cate, brand) => {
       package = '본품+하드케이스';
       boxInc = '브랜드 박스 포함■ 미포함□';
       dustInc = '더스트백 포함□ 미포함■';
-    }
+    } 
   } else if(category_wallet.includes(cate)) { // 자갑
     package = '본품+하드케이스';
     boxInc = '브랜드 박스 포함■ 미포함□';

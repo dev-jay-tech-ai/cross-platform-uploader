@@ -20,6 +20,7 @@ module.exports = (gender, sizeType, brand, div) => {
   const shoeTemp = require('../asset/template/shoes_temp');
   const { _us, _uk, _eu, _burberry, _choo, _maison, _acne, _mcqueen, _tb, _etro, _btv } = require('../asset/template/m_shoes_size_chart');
   const { w_eu_shoes, w_us, w_goldengoose } = require('../asset/template/w_shoes_size_chart');
+  const { _moncler } = require('../asset/template/m_clothing_size_chart');
   // if(sizeType === 0) return '정보없음';
   // else if(sizeType === 1) return '제너럴사이즈'
   // else if(sizeType === 2) return '치수'
@@ -27,6 +28,7 @@ module.exports = (gender, sizeType, brand, div) => {
   if(div === '남성의류') { 
     if(sizeType === 1) {
       if(brand.includes('토리버치')) return tory+clothing;
+      else if(brand === '몽클레어' ||  brand === '몽크레어') return _moncler+clothing;
       else return general+clothing;
     } else if(sizeType === 'IT') return italy+clothing;
     else if(sizeType === 'ETC') return etc+clothing;
@@ -74,7 +76,7 @@ module.exports = (gender, sizeType, brand, div) => {
       if(sizeType === 'EU') {
         if(brand === '골든구스' || brand.includes('골든구스')) return shoeTemp(brand,w_goldengoose)+goldengoose;
         else return shoeTemp(brand,w_eu_shoes)+shoes;
-      } else if(sizeType === 'UK') return shoeTemp(brand,w_uk)+shoes;
+      } else if(sizeType === 'UK') return w_uk+shoes;
       else return shoeTemp(brand,w_eu_shoes)+shoes;
     }
 
