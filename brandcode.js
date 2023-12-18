@@ -1,7 +1,6 @@
 module.exports = (brand) => {
     let code = brand;
-    const list = 
-  [ 
+    const list = [ 
     {'brand':'DKNY','code':'DKNY (15126)'},
     {'brand':'H&M','code':'H&M (151125)'},
     {'brand':'가니','code':'GANNI (198951))'},

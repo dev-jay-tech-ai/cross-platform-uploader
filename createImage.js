@@ -4,14 +4,12 @@ const axios = require('axios');
 const results = []; // 'Link', 'Name', 'Comments', 'Images'
 
 /** 👇 아래에 있는 file에 
-    CSV 파일 명을 복사해주세요 :) 46(40*/
-const file = '2023-10-30_091812(100)';
+  CSV 파일 명을 복사해주세요 :) 46(440*/
+const file = '2023-12-14_145452(40)';
 /** 👆 위에 있는 file에
-    CSV 파일 명을 복사해주세요 :) */
-
+  CSV 파일 명을 복사해주세요 :) */
 const filename = (name) => { return name };
 module.exports = filename(file);
-
 const path = 'csv/'+file+'.csv';
 fs.readdir('images/'+file, (err) => { 
   if(err) {

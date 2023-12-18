@@ -58,7 +58,8 @@ module.exports = (name) => {
     if(name.includes('벨트')) cate = 50003988  // 정장벨트로 통일
     if(name.includes('지갑') || name.includes('월렛')) {
       if(name.includes('반지갑') || name.includes('폴딩') || name.includes('콤팩트')) cate = 50003985
-      if(name.includes('장지갑')) cate = 50003987
+      else if(name.includes('장지갑')) cate = 50003987
+      else cate = 50003985
     } 
 
     if(name.includes('스카프')) cate = 50004010
@@ -79,13 +80,14 @@ module.exports = (name) => {
     
   } else {
     // 여성
-    
+    if(name.includes('핸드') && name.includes('워머')) cate = 50000434
     // 패션잡화  
     if(name.includes('스카프링') || name.includes('쥬얼리박스')) cate = 50000434
     if(name.includes('벨트')) cate = 50000539
     if(name.includes('모자')) {
       if(name.includes('귀') || name.includes('귀달이') || name.includes('이어')) cate = 50000548
     }
+    if(name.includes('귀마개')) cate = 50000550
     if(name.includes('커프스링') || name.includes('커프스 링')) cate = 50000564
     if(name.includes('숄') || name.includes('스톨') ||  
       name.includes('케이프') || name.includes('판초')) cate = 50000567
