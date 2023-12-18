@@ -3,8 +3,7 @@
 Streamlined Upload Processes
 
 Implemented logic to simplify and consolidate previously repetitive uploads. <br>
-The system can now intelligently infer the category through the title, <br>
-allowing for a one-time, efficient upload using a predefined template. <br>
+The system can now intelligently infer the category through the title, <br> allowing for a one-time, efficient upload using a predefined template. <br>
 <br>
 <br>
 
@@ -22,3 +21,11 @@ B. Image and Excel File Creation
   node createImage.js
   node createExcelfile.js
   ```
+
+
+
+
+
+<br>
+<br>
+Node js 18.17.1
